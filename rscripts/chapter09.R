@@ -4,11 +4,11 @@
 # 단계 1: 데이터베이스 연결을 위한 패키지 설치 
 install.packages("rJava")
 install.packages("DBI")
-install.packages("RJDBC")
+install.packages("RJDBC", INSTALL_opts = "--no-multiarch")
 
 # 단계 2: 데이터베이스 연결을 위한 패키지 로딩
 library(DBI)
-Sys.setenv(JAVA_HOME = "C:\\Program Files\\Java\\jre1.8.0_251")
+Sys.setenv(JAVA_HOME = "C:\\Program Files\\Java\\jdk-17.0.5")
 library(rJava)
 library(RJDBC)
 
@@ -16,11 +16,11 @@ library(RJDBC)
 # 실습: 드라이버 로딩과 데이터베이스 연동
 # 단계 1: Drive 설정
 drv <- JDBC("oracle.jdbc.driver.OracleDriver",
-            "F:\\OracleTest\\ojdbc8.jar")
+            "d:\\knh\\dev-tool\\dbhomeXE\\jdbc\\lib\\ojdbc8.jar")
 
 # 단계 2: 오라클 데이터베이스 연결
 conn <- dbConnect(drv,
-                  "jdbc:oracle:thin:@//127.0.0.1:1521/xe", "c##scott", "tiger")
+                  "jdbc:oracle:thin:@//127.0.0.1:1521/xe", "c##kim", "1234")
 
 
 # 실습: 데이터베이스로부터 레코드 검색, 추가, 수정, 삭제하기 
@@ -61,10 +61,11 @@ dbGetQuery(conn, query)
 # 실습: MariaDB 드라이벼 로딩과 데이터베이스 연동
 # 단계 1: Driver 설정
 drv <- JDBC(driverClass = "com.mysql.cj.jdbc.Driver", 
-            "C:\\Program Files (x86)\\MySQL\\Connector J 8.0\\mysql-connector-java-8.0.19.jar")
+            "C:\\Program Files (x86)\\MySQL\\Connector J 8.0\\mysql-connector-j-8.0.32.jar")
 
 # 단계 2: MariaDB 데이터베이스 연결
-conn <- dbConnect(drv, "jdbc:mysql://127.0.0.1:3306/work", "scott", "tiger")
+conn <- dbConnect(drv, "jdbc:mysql://127.0.0.1:3307/work", "scott", "1234")
+
 
 
 # 실습: 데이터베이스롷부터 레코드 검색, 추가, 수정, 삭제하기 
@@ -96,7 +97,7 @@ goodsAll
 
 # 실습: csv 파일의 자료를 테이블에 저장하기 
 # 단계 1: 파일 자료를 테이블에 저장하기 
-recode <- read.csv("C:/Rwork/Part-II/recode.csv")
+recode <- read.csv("C:/Rwork/Part-II/recode.csv",fileEncoding = 'euc-kr')
 dbWriteTable(conn, "goods", recode)
 dbWriteTable(conn, "goods2", recode)
 
@@ -149,7 +150,7 @@ install.packages("tm")
 #library(KoNLP)
 install.packages("hash")
 install.packages("tau")
-install.packages("devtools")
+install.packages("devtools", type='win.binary')
 install.packages("RSQLite")
 
 library(KoNLP)
@@ -190,8 +191,8 @@ facebook_nouns[1]
 
 # 실습: 추출된 단어를 대상으로 전처리하기 
 # 단계 1: 추출된 단어를 이용하여 말뭉치(Corpus) 생성
+myCorpus<-Corpus(VectorSource(facebook_nouns))
 myCorpus
-
 
 # 단계 2: 데이터 전처리 
 # 단계 2-1: 문장부호 제거 
@@ -204,6 +205,7 @@ myCorpusPrepro <- tm_map(myCorpusPrepro, tolower)
 myCorpusPrepro <- tm_map(myCorpusPrepro, removeWords, stopwords('english'))
 # 단계 2-5: 전처리 결과 확인
 inspect(myCorpusPrepro[1:5])
+
 
 
 

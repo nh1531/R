@@ -1,20 +1,23 @@
-# Chapter 12
+# Chapter 12 교차검증과 카이제곱
 
 # 실습: 변수 리코딩과 데이터프레임 생성하기 
 # 단계 1: 실습 파일 가져오기 
+getwd()
 setwd("C:/Rwork/Part-III")
-data <- read.csv("cleanDescriptive.csv", header = TRUE)
+data <- read.csv("cleanDescriptive.csv", header = TRUE, fileEncoding = "euc-kr")
 
 head(data)
+View(data)
 
-# 단계 2: 변수 리코딩
+# 단계 2: 변수 리코딩 
+#x,y에 담음
 x <- data$level2
 y <- data$pass2
 
 # 단계 3: 데이터프레임 생성
 result <- data.frame(Level = x, Pass = y)
 dim(result)
-
+View(result)
 
 
 # 실습: 교차 분할표 작성
@@ -33,11 +36,12 @@ CrossTable(x = diamonds$color, y = diamonds$cut)
 
 
 
-# 실습: 패키지를 이용한 교차 분할표 작성: 부모의 학력수준과 자녀 대학 진학여부
+# 실습: 패키지를 이용한 교차 분할표 작성: 부모의 학력수준과 자녀 대학 진학 성공을 결정하는가
 x <- data$level2
 y <- data$pass2
 
-CrossTable(x, y)
+# p값이 0.05 밑으로 떨어져야 사용 가능. 95% 신뢰구간, 가설폐기
+CrossTable(x, y, chisq = TRUE)
 
 
 
@@ -80,9 +84,11 @@ setwd("C:/Rwork/Part-III")
 data <- read.csv("homogenity.csv")
 head(data)
 
+# 결측치 제거 !is.na(survey)
 data <- subset(data, !is.na(survey), c(method, survey))
 
 # 단계 2: 코딩 변경(변수 리코딩)
+# 범주형으로 변경
 data$method2[data$method == 1] <- "방법1"
 data$method2[data$method == 2] <- "방법2"
 data$method2[data$method == 3] <- "방법3"
@@ -98,4 +104,5 @@ table(data$method2, data$survey2)
 
 
 # 단계 4: 동질성 검정 - 모든 특성치에 대한 추론검정
+# df 자유도
 chisq.test(data$method2, data$survey2)
