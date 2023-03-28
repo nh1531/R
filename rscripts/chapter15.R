@@ -1,43 +1,53 @@
-# Chapter 15
+# Chapter 15 기계학습
 
-# 실습: 단순 선형 회귀분석 수행
-# 단계 1: 데이터 가져오기 
-product <- read.csv("C:/Rwork/Part-III/product.csv", header = TRUE)
+# 실습: "단순" 선형 회귀분석 수행
+# 단계 1: 데이터 가져오기 (전처리 NA)
+product <- read.csv("./data/product.csv", header = TRUE, fileEncoding = "euc-kr")
 str(product)
 
-# 단계 2: 독립변수와 종속벼수 생성
+# 단계 2: 독립변수와 종속변수 생성
 y = product$제품_만족도 
 x = product$제품_적절성
 df <- data.frame(x, y)
+df
 
-# 단계 3: 단순 선형회귀 모델 생성
+# 벡터 : 컬럼 만들 때
+# 매트릭스 : 벡터가 모여있는 것
+# 테이블 : header가 있음
+# 데이터 프레임 : 테이블인데 안을 들여다 볼 수 있는 method 제공
+
+# 단계 3: 단순 선형회귀 "모델" 생성 
+# 기울기, 절편 구함
 result.lm <- lm(formula = y ~ x, data = df)
 
 # 단계 4: 회귀분석의 절편과 기울기
 result.lm
 
-# 단계 5: 모델의 적합값과 잔차 보기 
-names(result.lm)
+# 단계 5: 모델의 잔차 보기 
+# 찬차 : 회귀에서 씀
+residuals(result.lm)[1:2]
+
+#names(result.lm)
 
 # 단계 5-1: 적합값 보기 
-fitted.values(result.lm)[1:2]
+#fitted.values(result.lm)[1:2]
 
 # 단계 5-2: 관측값 보기 
-head(df, 1)
+#head(df, 1)
 
 # 단계 5-3: 회귀방정식을 적용하여 모델의 적합값 계산
-Y = 0.7789 + 0.7393 * 4
-Y
+#Y = 0.7789 + 0.7393 * 4
+#Y
 
 # 단계 5-4: 잔차(오차) 계산
-3 - 3.735963
+#3 - 3.735963
 
 
 # eksrP 5-5: 모델의 잔차 보기 
-residuals(result.lm)[1:2]
+#residuals(result.lm)[1:2]
 
 # 단계 5-6: 모델의 잔차와 회귀방정식에 의한 적합값으로부터 관측값 계산
--0.7359630 + 3.735963
+#-0.7359630 + 3.735963
 
 
 # 실습: 선형 회귀분석 모델 시각화
@@ -56,7 +66,8 @@ abline(result.lm, col = "red")
 summary(result.lm)
 
 
-# 실습: 다중 회귀분ㄴ석
+# 실습: 다중 회귀분석
+# x가 여러개, 검증이 복잡함, 잘안씀
 # 단계 1: 변수 모델링
 y = product$제품_만족도
 x1 = product$제품_친밀도

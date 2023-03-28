@@ -120,7 +120,7 @@ nat <- data.frame(subject$s1, subject$s2)
 # 단계 2: 요인별 산술평균 계산
 app_science <- round((app$subject.s5 + app$subject.s6) / ncol(app), 2)
 soc_science <- round((soc$subject.s3 + soc$subject.s4) / ncol(soc), 2)
-nat_science <- round((nat$subject.s1 + nat$subject.s2) / ncol(net), 2)
+nat_science <- round((nat$subject.s1 + nat$subject.s2) / ncol(nat), 2)
 
 # 단계 3: 상관관계 분석
 subject_factor_df <- data.frame(app_science, soc_science, nat_science)
@@ -158,7 +158,7 @@ dim(dw_df)
 s <- data.frame(dw_df$Q8, dw_df$Q9, dw_df$Q10, dw_df$Q11)
 c <- data.frame(dw_df$Q1, dw_df$Q2, dw_df$Q3)
 p <- data.frame(dw_df$Q5, dw_df$Q6, dw_df$Q7)
-
+s
 # 단계 3: 요인별 산술평균 계산
 satisfaction <- round(
   (s$dw_df.Q8 + s$dw_df.Q9 + s$dw_df.Q10 + s$dw_df.Q11) / ncol(s), 2)
@@ -166,26 +166,27 @@ closeness <- round(
   (c$dw_df.Q1 + c$dw_df.Q2 + c$dw_df.Q3) / ncol(s), 2)
 pertinence <- round(
   (p$dw_df.Q5 + p$dw_df.Q6 + p$dw_df.Q7) / ncol(s), 2)
-
+satisfaction
 # 단계 4: 상관관계 분석
 drinking_water_factor_df <- data.frame(satisfaction, closeness, pertinence)
 colnames(drinking_water_factor_df) <- c("제품만족도", "제품친밀도", "제품적절성")
 cor(drinking_water_factor_df)
 
 length(satisfaction); length(closeness); length(pertinence)
+result3 <- factanal(dw_df, factors = 3, rotation = "value")
 
 
 
 
 # 실습: 기술 통계량 구하기 
 # 단계 1: 데잍 가져오기 
-product <- read.csv("C:/Rwork/Part-III/product.csv", header = TRUE)
+product <- read.csv("C:/Rwork/Part-III/product.csv", header = TRUE, fileEncoding = "euc-kr")
 head(product)
 
 # 단계 2: 기술 통계량
 summary(product)
 sd(product$제품_친밀도); sd(product$제품_적절성); sd(product$제품_만족도)
-
+cor(product)
 
 # 실습: 상관계수 보기 
 # 단계 1: 변수 간의 상관계수 보기 
