@@ -81,12 +81,13 @@ summary(g3)
 idist <- dist(iris[1:4])
 hc <- hclust(idist)
 plot(hc, hang = -1)
+rect.hclust(hc, k = 4, border = "red")
 
 # 단계 2: 군집 수 자르기 
 ghc <- cutree(hc, k = 3)
 ghc
 
-# 단계 3: iris 데이터 셋에 ghc 칼러 ㅁ추가 
+# 단계 3: iris 데이터 셋에 ghc 칼럼 추가 
 iris$ghc <- ghc
 table(iris$ghc)
 head(iris)
@@ -105,6 +106,7 @@ summary(g3[1:4])
 # 단계 1: 군집분석에 사용할 변수 추출
 library(ggplot2)
 data(diamonds)
+nrow(diamonds)
 t <- sample(1:nrow(diamonds), 1000)
 test <- diamonds[t, ]
 dim(test)
@@ -118,6 +120,7 @@ head(mydia)
 result <- hclust(dist(mydia), method = "average")
 result
 plot(result, hang = -1)
+rect.hclust(result, k = 3, border = "red")
 
 
 # 단계 3: 비계층적 군집분석
@@ -154,7 +157,8 @@ library(arules)
 
 # 단계 2: 트랜잭션 객체 생성
 setwd("C:/Rwork/Part-IV")
-tran <- read.transactions("tran.txt", format = "basket", sep = ",")
+# tran.txt 파일 열어서 다른 이름으로 저장-> 파일 utf-8로 바꾸기
+tran <- read.transactions("tran.txt", format = "basket", sep = "," )
 tran
 
 
@@ -209,7 +213,7 @@ inspect(btran)
 # 실습: Adult 데이터 셋 가져오기 
 data(Adult)
 Adult
-
+inspect(head(Adult))
 
 # 실습: AdultUCI 데이터 셋 보기 
 data("AdultUCI")
@@ -265,7 +269,8 @@ install.packages("arulesViz")
 library(arulesViz)
 
 # 단계 2: 연관규칙 시각화
-plot(ar3, method = "graph", control = list(type = "items"))
+# engine = "htmlwidget" -> 규칙들을 selectbox로 만들어줌
+plot(ar5, method = "graph", control = list(type = "items"), engine = "htmlwidget")
 
 
 # 실습: Groceries 데이터 셋으로 연관분석 하기 
@@ -298,17 +303,18 @@ inspect(rules)
 
 # 실습: 발견된 규칙 시각화 
 library(arulesViz)
-plot(rules, method = "graph")
+plot(rules, method = "graph", engine = "htmlwidget")
 
 
 
 # 실습: 특정 상품(item)으로 서브 셋 작성과 시각화 
 # 단계 1: 오른쪽 item이 전지분유(whole milk)인 규칙만 서브 셋으로 작성
+# rhs : righthandside
 wmilk <- subset(rules, rhs %in% 'whole milk')
 wmilk
 
 inspect(wmilk)
-plot(wmilk, method = "graph")
+plot(wmilk, method = "graph", engine = "htmlwidget")
 
 # 단계 2: 오른쪽 item이 other vegetables인 규칙만 서브 셋으로 작성
 oveg <- subset(rules, rhs %in% 'other vegetables')
@@ -318,12 +324,14 @@ plot(oveg, method = "graph")
 
 
 # 단계 3: 오른쪽 item이 vegetables 단어가 포함된 규칙만 서브 셋으로 작성
-oveg <- subset(rules, rhs %in% 'vegetables')
-
+# rhs의 vegetables 값이 없어서 lhs의 yogurt로 변경
+oveg <- subset(rules, lhs %in% 'yogurt')
 oveg
 inspect(oveg)
+plot(oveg, method = "graph", engine = "htmlwidget")
 
 # 단계 4: 왼쪽 item이 butter 또는 yogurt인 규칙만 서브 셋으로 작성
 butter_yogurt <- subset(rules, lhs %in% c('butter', 'yogurt'))
 butter_yogurt
 inspect(butter_yogurt)
+plot(butter_yogurt, method = "graph", engine = "htmlwidget")
