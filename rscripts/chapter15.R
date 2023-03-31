@@ -113,7 +113,8 @@ cor(iris[ , -5])
 
 
 # 실습: 데이터 셋 생성과 회귀모델 생성
-# 단계 1: 학습데이터와 검저엗이터 표본 추출
+# 단계 1: 학습데이터와 검정데이터 표본 추출
+# 데이터가 민감하다
 x <-sample(1:nrow(iris), 0.7 * nrow(iris))
 train <- iris[x, ]
 test <- iris[-x, ]
@@ -235,37 +236,42 @@ pr <- prediction(pred, test$RainTomorrow)
 prf <- performance(pr, measure = "tpr", x.maeasure = "fpr")
 plot(prf)
 
-
-
+# -- 디시젼트리 
+# 결측값 처리 안함
 # 실습: 의사결정 트리 생성: ctree() 함수 이용 
 # 단계 1: party 패키지 설치 
 install.packages("party")
 library(party)
 
 # 단계 2: airquality 데이터 셋 로딩
-#install.packages("datasets")
+install.packages("datasets")
 library(datasets)
 str(airquality)
+View(airquality)
 
 # 단계 3: formula 생성
 formula <- Temp ~ Solar.R + Wind + Ozone
 
 # 단계 4: 분류모델 생성 - formula를 이용하여 분류모델 생성
 air_ctree <- ctree(formula, data = airquality)
-air_ctree
+air_ctree # 이렇게는 못봄
 
 # 단계 5: 분류분석 결과
-plot(air_ctree)
-
-
+plot(air_ctree) #간단한 그래프 그림. p는 유의검증값
 
 # 실습: 학습데이터와 검정데이터 샘플링으로 분류분석 수행
 # 단계 1: 학습데이터와 검정데이터 샘플링
-#set.seed(1234)
-idx <- sample(1:nrow(iris), nrow(iris) * 0.7)
+# 분류모델 많이 사용 : iris, 손글씨 분류 모델, 패션 mnist
+# iris dataset
+set.seed(42)
+# 7:3으로 인덱스 분류
+# 숫자에 민감. overfitting 0.7을 0.65로만 바꿔도 값이 달라짐
+idx <- sample(1:nrow(iris), nrow(iris) * 0.7) 
 train <- iris[idx, ]
 test <- iris[-idx, ]
 
+# 시각화 그래프는 알아야 함 : 히스토그램, 산점도, 
+# r은 y가 먼저 온다. y~x
 # 단계 2: formula(공식) 생성
 formula <- Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
 
@@ -288,7 +294,10 @@ pred <- predict(iris_ctree, test)
 table(pred, test$Species)
 
 # 단계 5-2: 분류 정확도 - 96%
-(14 + 16 + 13) / nrow(test)
+# 혼돈 매트릭스. f1 값(4개)
+# 정밀도 : true라고 분류한 것들 중에서 실제로 true인 것의 비율
+# 재현율 : 실제 True인 것 중에서 True라고 예측한 것의 비율
+(18 + 13 + 13) / nrow(test)
 
 
 # 실습: K겹 교차 검정 샘플링으로 분류 분석하기 
@@ -461,14 +470,14 @@ table(weather_pred2, weather$RainTomorrow)
 (278 + 53) / nrow(weather)
 
 
-
+# --
 # 실습: 랜덤 포레스트 기본 모델 생성
 # 단계 1: 패키지 설치 및 데이터 셋 가져오기 
 install.packages("randomForest")
 library(randomForest)
 data(iris)
 
-# 단계 2: 랜덤 포레스트 모데 ㄹ생성
+# 단계 2: 랜덤 포레스트 모델 생성
 model <- randomForest(Species ~ ., data = iris)
 model
 
